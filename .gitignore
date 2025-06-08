@@ -1,0 +1,12 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+
+# Ignore node_modules if frontend uses Node.js
+frontend/node_modules/
+backend/__pycache__/
+*.db
+.env
+
+# macOS
+.DS_Store
