@@ -1,11 +1,11 @@
 import React from "react";
-import GuessGame from "./GuessGame"; // <-- Add this line
+import AnimalGame from "./AnimalGame"; // <-- Add this line
 
 function App() {
   return (
     <div>
       <h1>Animal Guess Game</h1>
-      <GuessGame />
+      <AnimalGame />
     </div>
   );
 }
