@@ -1,11 +1,17 @@
+import "./App.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import AnimalLetterInputs from "./AnimalLetterInputs"; // <-- Add this line
+import ScoreBoard from "./ScoreBoard";
+
 
 const AnimalGame = () => {
   const [animals, setAnimals] = useState([]);
   const [index, setIndex] = useState(0);
   const [inputLetters, setInputLetters] = useState([]);
   const [feedback, setFeedback] = useState("");
+  const [score, setScore] = useState(0); 
+
 
   // Fetch animals on load
   useEffect(() => {
@@ -45,8 +51,10 @@ const AnimalGame = () => {
 
       if (guess === actual) {
         setFeedback("✅ Correct!");
+        setScore((prev) => prev + 1); 
+
       } else {
-        setFeedback("");
+        setFeedback("Wrong guess, keep trying!");
       }
     }
   };
@@ -54,72 +62,73 @@ const AnimalGame = () => {
   // Go to next animal
   const handleNext = () => {
     if (animals.length === 0) return;
-    setIndex((prev) => (prev + 1) % animals.length);
+    if (index < animals.length - 1) {
+      setIndex((prev) => prev + 1);
+    }
   };
+
+  const handleRestart = () => {
+  setIndex(0);
+  setScore(0);
+  setFeedback("");
+  if (animals.length > 0) {
+    const first = animals[0];
+    const letters = Array.from(first.name).map((ch, i) =>
+      i % 2 === 0 ? ch : ""
+    );
+    setInputLetters(letters);
+  }
+};
 
   if (animals.length === 0 || !animals[index]) return <p>Loading...</p>;
 
   const current = animals[index];
+  const isGameOver = index === animals.length - 1;
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
+  <div className="animal-game-bg">
+    <div className="animal-game-box">
       <h2>Guess the Animal</h2>
+      <ScoreBoard score={score} total={animals.length} />
+
       <img
         src={current.image_url}
         alt="animal"
-        style={{ width: "300px", height: "300px", objectFit: "cover", borderRadius: "12px" }}
+        className="animal-image"
       />
 
-      <div style={{ margin: "20px", fontSize: "24px" }}>
-        {inputLetters.map((letter, i) =>
-          i % 2 === 0 ? (
-            // Show alternate letter as read-only
-            <input
-              key={i}
-              type="text"
-              value={letter}
-              readOnly
-              style={{
-                width: "40px",
-                height: "40px",
-                fontSize: "24px",
-                textAlign: "center",
-                marginRight: "5px",
-                background: "#eee",
-                border: "1px solid #ccc"
-              }}
-            />
-          ) : (
-            // Allow typing in the other positions
-            <input
-              key={i}
-              type="text"
-              value={letter}
-              maxLength={1}
-              onChange={(e) => handleChange(i, e.target.value)}
-              style={{
-                width: "40px",
-                height: "40px",
-                fontSize: "24px",
-                textAlign: "center",
-                marginRight: "5px"
-              }}
-            />
-          )
-        )}
-      </div>
+      <AnimalLetterInputs
+        inputLetters={inputLetters}
+        animalName={current.name}
+        onChange={handleChange}
+      />
 
-      <div style={{ fontSize: "20px", color: "green", height: "24px" }}>{feedback}</div>
+      <div className="animal-feedback">{feedback}</div>
 
       <button
         onClick={handleNext}
         style={{ marginTop: "20px", padding: "10px 20px" }}
-        disabled={animals.length === 0}
+        disabled={animals.length === 0 || isGameOver}
       >
         Next
       </button>
+
+      {isGameOver && (
+        <div className="animal-game-over">
+          🎉 Game Over! Your score: {score} / {animals.length}
+          <br />
+          <button
+            onClick={handleRestart}
+            style={{ marginTop: "16px", padding: "8px 20px" }}
+          >
+            Restart
+          </button>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default AnimalGame;

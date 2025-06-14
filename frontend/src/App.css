@@ -40,3 +40,42 @@
 .read-the-docs {
   color: #888;
 }
+.animal-game-bg {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background: #ebcccc;
+}
+
+.animal-game-box {
+  background: #ebcccc;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+  margin-top: 40px;
+  min-width: 340px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.animal-image {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 16px 0;
+}
+
+.animal-feedback {
+  font-size: 20px;
+  color: green;
+  height: 24px;
+}
+
+.animal-game-over {
+  margin-top: 20px;
+  font-size: 22px;
+  color: #1976d2;
+}
